@@ -1,17 +1,16 @@
 const express = require('express')
+const morgan = require('morgan');
 const app = express()
 
 app.use(express.json())
 
-const requestLogger = (request, response, next) => {
-    console.log('Method:', request.method)
-    console.log('Path:  ', request.path)
-    console.log('Body:  ', request.body)
-    console.log('---')
-    next()
-}
+morgan.token('request-body', (req,res) => {
+return JSON.stringify(req.body)
+})
+app.use(morgan('tiny')); //Morgan logging with tiny configuration
+app.use(morgan(':request-body')); //Morgan logging with request body
 
-app.use(requestLogger)
+
 
 let persons = [
     {
